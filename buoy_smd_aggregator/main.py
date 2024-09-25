@@ -47,7 +47,7 @@ def main():
         logging.info("Running SMD Aggregator on startup.") 
         run_smd_aggregator()
 
-        scheduler.add_job(run_smd_aggregator, 'interval', days=7)
+        scheduler.add_job(run_smd_aggregator, 'interval', days=1)
 
         logging.info("Scheduler started. Services will run on their schedules.")
         scheduler.start()
