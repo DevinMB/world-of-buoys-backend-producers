@@ -4,7 +4,7 @@ import logging
 import time
 from datetime import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
-from summary_aggregator import SummaryAggregator
+from SMD_aggregator import SMDAggregator
 from dotenv import load_dotenv
 import warnings
 from urllib3.exceptions import NotOpenSSLWarning
@@ -23,30 +23,30 @@ logging.basicConfig(
 
 REDIS_SERVER = os.getenv("REDIS_SERVER")
 
-def run_summary_aggregator():
-    logging.info("SummaryAggregator started running.")
+def run_smd_aggregator():
+    logging.info("Standard Metorilogical Data Aggregator has begun running.")
     start_time = time.time()
 
     redis_conn = redis.Redis(host=REDIS_SERVER, port=6379, decode_responses=True)
-    aggregator = SummaryAggregator(redis_conn)
-    aggregator.fetch_and_store_buoy_data()
-    
-    elapsed_time = time.time() - start_time
-    logging.info(f"SummaryAggregator finished successfully. Elapsed time: {elapsed_time:.2f} seconds.")
+    aggregator = SMDAggregator(redis_conn)
+    aggregator.run()
 
+    elapsed_time = time.time() - start_time
+    hours, remainder = divmod(elapsed_time, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    logging.info(f"Standard Metorilogical Data Aggregator finished successfully. Elapsed time: {int(hours)}h {int(minutes)}m {int(seconds)}s.")
 
 def main():
     try:
         print("Application Running...")
         scheduler = BlockingScheduler()
 
-        logging.info("Running SummaryAggregator on startup.")
-        run_summary_aggregator()
+        # This guy takes an hour to load everything - comment out for normal testing
+        logging.info("Running SMD Aggregator on startup.") 
+        run_smd_aggregator()
 
-        scheduler.add_job(run_summary_aggregator, 'cron', hour=0, minute=0)
-
-        # Schedule other services here (for future tasks)
-        # scheduler.add_job(run_other_service, 'interval', hours=6)
+        scheduler.add_job(run_smd_aggregator, 'interval', days=7)
 
         logging.info("Scheduler started. Services will run on their schedules.")
         scheduler.start()

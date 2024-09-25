@@ -8,7 +8,7 @@ load_dotenv()
 REDIS_SERVER = os.getenv("REDIS_SERVER")
 redis_conn = redis.Redis(host=REDIS_SERVER, port=6379, decode_responses=True)
 
-class BuoyDataAggregator:
+class SMDAggregator:
     BASE_URL = "https://www.ndbc.noaa.gov/data/realtime2/"
 
     def __init__(self, redis_conn):
@@ -30,7 +30,7 @@ class BuoyDataAggregator:
         for line in lines:
             if line.startswith('#') or not line.strip():
                 continue
-            
+
             parsed_data = self.parse_buoy_data_line(line)
             if parsed_data:
                 timestamp, data = parsed_data
@@ -72,9 +72,3 @@ class BuoyDataAggregator:
         buoy_stations = self.get_buoy_stations()
         for station_id in buoy_stations:
             self.fetch_and_store_buoy_data(station_id)
-
-
-# Example usage
-if __name__ == "__main__":
-    aggregator = BuoyDataAggregator(redis_conn)
-    aggregator.run()

@@ -3,7 +3,7 @@ from urllib3.exceptions import NotOpenSSLWarning
 import unittest
 from unittest.mock import patch
 import fakeredis
-from bouy_information_aggregator.summary_aggregator import SummaryAggregator
+from bouy_summary_aggregator.summary_aggregator import SummaryAggregator
 
 
 warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
