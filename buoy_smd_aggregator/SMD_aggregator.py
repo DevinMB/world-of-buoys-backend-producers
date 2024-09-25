@@ -24,10 +24,12 @@ class SMDAggregator:
         response = requests.get(url)
         if response.status_code != 200:
             print(f"Failed to fetch data for {station_id}")
-            return
+            return 0
 
         lines = response.text.splitlines()
         key = f"buoy:{station_id}:standard-data"
+
+        records_processed_for_station = 0
 
         for line in lines:
             if line.startswith('#') or not line.strip():
@@ -36,17 +38,16 @@ class SMDAggregator:
             parsed_data = self.parse_buoy_data_line(line)
             if parsed_data:
                 timestamp_str, data = parsed_data
-                # Convert timestamp to float for Redis score
                 timestamp = float(timestamp_str)
-                # Check if the timestamp already exists
                 count = self.redis_conn.zcount(key, timestamp, timestamp)
                 if count == 0:
                     # Timestamp does not exist, store the data
                     self.redis_conn.zadd(key, {json.dumps(data): timestamp})
+                    records_processed_for_station = records_processed_for_station + 1
                 else:
-                    # Timestamp exists, stop processing further
-                    print(f"Timestamp {timestamp_str} already exists for station {station_id}, stopping further processing.")
                     break  # Exit the loop since the rest of the data is older
+        
+        return records_processed_for_station      
 
 
     def parse_buoy_data_line(self, line):
@@ -77,11 +78,10 @@ class SMDAggregator:
 
         return timestamp, data
 
-    def store_buoy_data(self, station_id, timestamp, data):
-        key = f"buoy:{station_id}:standard-data"
-        self.redis_conn.zadd(key, {json.dumps(data): timestamp})
 
     def run(self):
         buoy_stations = self.get_buoy_stations()
+        records_processed = 0
         for station_id in buoy_stations:
-            self.fetch_and_store_buoy_data(station_id)
+            records_processed = records_processed + self.fetch_and_store_buoy_data(station_id)
+        return records_processed
