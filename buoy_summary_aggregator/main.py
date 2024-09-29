@@ -15,19 +15,19 @@ load_dotenv()
 
 warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
-
-formatter = json_log_formatter.JSONFormatter()
-json_handler = logging.StreamHandler(sys.stdout)  
-json_handler.setFormatter(formatter)
-
-logger = logging.getLogger()
-logger.addHandler(json_handler)
-logger.setLevel(logging.INFO)
-
 REDIS_SERVER = os.getenv("REDIS_SERVER")
+APP_NAME = os.getenv("APP_NAME")
+
+logging.basicConfig(
+    filename='data/app.log', 
+    level=logging.INFO,  
+    format=f'{{"app_name": "{APP_NAME}", "timestamp": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s"}}',
+    datefmt='%Y-%m-%dT%H:%M:%S'
+)
+
 
 def run_summary_aggregator():
-    logger.info("SummaryAggregator started running.")
+    logging.info("SummaryAggregator started running.")
     start_time = time.time()
 
     redis_conn = redis.Redis(host=REDIS_SERVER, port=6379, decode_responses=True)
@@ -38,7 +38,7 @@ def run_summary_aggregator():
     hours, remainder = divmod(elapsed_time, 3600)
     minutes, seconds = divmod(remainder, 60)
 
-    logger.info(f"SummaryAggregator finished successfully. Elapsed time: {int(hours)}h {int(minutes)}m {int(seconds)}s. {records_processed} records were processed.")
+    logging.info(f"SummaryAggregator finished successfully. Elapsed time: {int(hours)}h {int(minutes)}m {int(seconds)}s. {records_processed} records were processed.")
     print(f"Job complete, {records_processed} records processed. Awaiting next job.")
 
 def main():
@@ -46,17 +46,17 @@ def main():
         print("Application Running...")
         scheduler = BlockingScheduler()
 
-        logger.info("Running SummaryAggregator on startup.")
+        logging.info("Running SummaryAggregator on startup.")
         run_summary_aggregator()
 
         scheduler.add_job(run_summary_aggregator, 'cron', hour=0, minute=0)
 
-        logger.info("Scheduler started. Services will run on their schedules.")
+        logging.info("Scheduler started. Services will run on their schedules.")
         scheduler.start()
 
 
     except Exception as e:
-        logger.error(f"An error occurred: {e}", exc_info=True)
+        logging.error(f"An error occurred: {e}", exc_info=True)
         print("Application encountered an error, please see log file. Exiting.")
 if __name__ == "__main__":
     main()
