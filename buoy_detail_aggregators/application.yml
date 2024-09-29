@@ -19,6 +19,9 @@ services:
       - alpine-net
     entrypoint: |
       /bin/sh -c "
+      echo 'Release version: ${RELEASE_VERSION}';
+      echo 'Aggregator type: ${AGGREGATOR_TYPE}';
+      echo 'Checking data directory';
       apk add --no-cache python3 py3-pip git tar curl;
       pip3 install redis --break-system-packages;
       pip3 install python-dotenv --break-system-packages;
@@ -26,12 +29,15 @@ services:
       if [ ! -d /data/${AGGREGATOR_TYPE}-aggregator-v${RELEASE_VERSION} ]; then
         mkdir -p /data/${AGGREGATOR_TYPE}-aggregator-v${RELEASE_VERSION} && \
         curl -L https://github.com/DevinMB/world-of-buoys-backend-producers/archive/refs/tags/v${RELEASE_VERSION}.tar.gz | tar xz --strip-components=1 -C /data/${AGGREGATOR_TYPE}-aggregator-v${RELEASE_VERSION};
-        curl -L https://github.com/DevinMB/whisper-consumer/archive/refs/tags/v${RELEASE_VERSION}.tar.gz | tar xz --strip-components=1 -C /data/whisper-consumer-v${RELEASE_VERSION};
-
+        echo 'Data downloaded and extracted';
+      else
+        echo 'Data directory already exists';
       fi
       
       python3 /data/${AGGREGATOR_TYPE}-aggregator-v${RELEASE_VERSION}/buoy_detail_aggregators/main.py;
-      "
+      "    
+      
+
 
 networks:
   alpine-net:
