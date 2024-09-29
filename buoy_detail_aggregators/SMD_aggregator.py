@@ -2,10 +2,13 @@ import redis
 import os
 import requests
 import json
+import time
 from dotenv import load_dotenv
 load_dotenv()
 
 REDIS_SERVER = os.getenv("REDIS_SERVER")
+REQUEST_DELAY = os.getenv("REQUEST_DELAY")
+
 redis_conn = redis.Redis(host=REDIS_SERVER, port=6379, decode_responses=True)
 
 class SMDAggregator:
@@ -87,6 +90,7 @@ class SMDAggregator:
         total_stations = len(buoy_stations)
         current_buoy_count = 0
         for station_id in buoy_stations:
+            time.sleep(REQUEST_DELAY)
             records_processed = records_processed + self.fetch_and_store_buoy_data(station_id)
             print(f"{current_buoy_count}/{total_stations} Buoys processed.")
         return records_processed
