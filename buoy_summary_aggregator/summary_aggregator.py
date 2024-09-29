@@ -23,6 +23,8 @@ class SummaryAggregator:
         
         lines = data.splitlines()
 
+        records_processed = 0
+
         for line in lines:
             if line.strip() == "" or line.startswith("#"):
                 continue
@@ -59,5 +61,6 @@ class SummaryAggregator:
             file_types = available_files_by_station.get(station_id, [])
             if file_types:
                 self.redis_conn.sadd(available_info_key, *file_types)
+            records_processed += 1
 
-        print(f"Job complete. Awaiting next job.")
+        return records_processed
