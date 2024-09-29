@@ -2,3 +2,4 @@ redis
 apscheduler
 python-dotenv
 requests
+json_log_formatter
