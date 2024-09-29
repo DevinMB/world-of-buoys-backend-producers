@@ -90,7 +90,14 @@ class SMDAggregator:
         total_stations = len(buoy_stations)
         current_buoy_count = 0
         for station_id in buoy_stations:
+            available_info_key = f"buoy:{station_id}:available_info"
+            if not self.redis_conn.sismember(available_info_key, 'txt'):
+                print(f"Skipping {station_id} - .txt file not available.")
+                current_buoy_count += 1
+                records_processed = records_processed + self.fetch_and_store_buoy_data(station_id)
+                continue
             time.sleep(REQUEST_DELAY)
+            current_buoy_count += 1
             records_processed = records_processed + self.fetch_and_store_buoy_data(station_id)
             print(f"{current_buoy_count}/{total_stations} Buoys processed.")
         return records_processed

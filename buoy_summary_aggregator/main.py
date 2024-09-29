@@ -4,7 +4,7 @@ import logging
 import time
 from datetime import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
-from buoy_summary_aggregator.summary_aggregator import SummaryAggregator
+from summary_aggregator import SummaryAggregator
 from dotenv import load_dotenv
 import warnings
 from urllib3.exceptions import NotOpenSSLWarning

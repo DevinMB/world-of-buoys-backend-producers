@@ -2,6 +2,7 @@ import os
 import requests
 import redis
 import warnings
+from noaa_html_parser import NOAAParser
 warnings.filterwarnings("ignore")
 
 from dotenv import load_dotenv
@@ -15,7 +16,8 @@ class SummaryAggregator:
         self.redis_conn = redis_conn
 
     def fetch_and_store_buoy_data(self):
-        
+        available_files_by_station = NOAAParser.fetch_directory_file_list()
+
         response = requests.get(self.STATION_URL)
         data = response.text
         
@@ -52,3 +54,8 @@ class SummaryAggregator:
                 "forecast": forecast,
                 "note": note
             })
+
+            available_info_key = f"buoy:{station_id}:available_info"
+            file_types = available_files_by_station.get(station_id, [])
+            if file_types:
+                self.redis_conn.sadd(available_info_key, *file_types)
