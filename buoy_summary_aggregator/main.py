@@ -1,6 +1,7 @@
 import redis
 import os
 import logging
+import json_log_formatter
 import time
 import sys
 from datetime import datetime
@@ -15,12 +16,13 @@ load_dotenv()
 warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
 
+formatter = json_log_formatter.JSONFormatter()
+json_handler = logging.StreamHandler()
+json_handler.setFormatter(formatter)
 
-logging.basicConfig(
-    stream=sys.stdout,
-    level=logging.INFO,  
-    format='%(asctime)s - %(levelname)s - %(message)s',
-)
+logger = logging.getLogger()
+logger.addHandler(json_handler)
+logger.setLevel(logging.INFO)
 
 REDIS_SERVER = os.getenv("REDIS_SERVER")
 
