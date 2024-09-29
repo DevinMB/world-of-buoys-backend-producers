@@ -99,4 +99,5 @@ class SMDAggregator:
             current_buoy_count += 1
             records_processed = records_processed + self.fetch_and_store_buoy_data(station_id)
             print(f"{current_buoy_count}/{total_stations} Buoys processed.")
+        print(f"Aggregation Job Complete. Awaiting Next Job.")
         return records_processed
