@@ -2,6 +2,7 @@ import redis
 import os
 import logging
 import time
+import sys
 from datetime import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from summary_aggregator import SummaryAggregator
@@ -16,7 +17,7 @@ warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
 
 logging.basicConfig(
-    filename='app.log', 
+    stream=sys.stdout,
     level=logging.INFO,  
     format='%(asctime)s - %(levelname)s - %(message)s',
 )
