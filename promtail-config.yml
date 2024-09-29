@@ -29,4 +29,4 @@ scrape_configs:
           - localhost
         labels:
           job: 'python-app'
-          __path__: /logs/app.log  # This looks for /data/app.log in each container
+          __path__: /data/app.log  # This looks for /data/app.log in each container

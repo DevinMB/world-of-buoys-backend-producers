@@ -19,7 +19,7 @@ REDIS_SERVER = os.getenv("REDIS_SERVER")
 APP_NAME = os.getenv("APP_NAME")
 
 logging.basicConfig(
-    filename='app.log', 
+    filename='data/app.log', 
     level=logging.INFO,  
     format=f'{{"app_name": "{APP_NAME}", "timestamp": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s"}}',
     datefmt='%Y-%m-%dT%H:%M:%S'
