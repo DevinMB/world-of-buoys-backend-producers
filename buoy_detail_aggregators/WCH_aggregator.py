@@ -98,8 +98,8 @@ class WCHAggregator:
         for station_id in buoy_stations:
             available_info_key = f"buoy:{station_id}:available_info"
             if not self.redis_conn.sismember(available_info_key, 'dart'):
-                print(f"Skipping {station_id} - .dart file not available.")
-                records_processed = records_processed + self.fetch_and_store_buoy_data(station_id)
+                # print(f"Skipping {station_id} - .dart file not available.")
+                current_buoy_count += 1
                 continue
             time.sleep(REQUEST_DELAY)
             records_processed += self.fetch_and_store_buoy_data(station_id)

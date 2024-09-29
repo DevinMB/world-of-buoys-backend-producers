@@ -92,9 +92,8 @@ class SMDAggregator:
         for station_id in buoy_stations:
             available_info_key = f"buoy:{station_id}:available_info"
             if not self.redis_conn.sismember(available_info_key, 'txt'):
-                print(f"Skipping {station_id} - .txt file not available.")
+                # print(f"Skipping {station_id} - .txt file not available.")
                 current_buoy_count += 1
-                records_processed = records_processed + self.fetch_and_store_buoy_data(station_id)
                 continue
             time.sleep(REQUEST_DELAY)
             current_buoy_count += 1
