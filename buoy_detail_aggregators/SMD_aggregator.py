@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 REDIS_SERVER = os.getenv("REDIS_SERVER")
-REQUEST_DELAY = os.getenv("REQUEST_DELAY")
+REQUEST_DELAY = float(os.getenv("REQUEST_DELAY"))
 
 redis_conn = redis.Redis(host=REDIS_SERVER, port=6379, decode_responses=True)
 
