@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
 
 formatter = json_log_formatter.JSONFormatter()
-json_handler = logging.StreamHandler()
+json_handler = logging.StreamHandler(sys.stdout)  
 json_handler.setFormatter(formatter)
 
 logger = logging.getLogger()
