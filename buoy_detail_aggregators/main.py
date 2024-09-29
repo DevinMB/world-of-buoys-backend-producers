@@ -14,10 +14,13 @@ load_dotenv()
 
 warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
+APP_NAME = os.getenv("APP_NAME")
+
 logging.basicConfig(
-    filename='app.log', 
+    filename='data/app.log', 
     level=logging.INFO,  
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    format=f'{{"app_name": "{APP_NAME}", "timestamp": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s"}}',
+    datefmt='%Y-%m-%dT%H:%M:%S'
 )
 
 REDIS_SERVER = os.getenv("REDIS_SERVER")
