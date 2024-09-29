@@ -1,0 +1,4 @@
+redis
+apscheduler
+python-dotenv
+requests
