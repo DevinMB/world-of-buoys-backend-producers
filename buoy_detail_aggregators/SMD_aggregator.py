@@ -21,10 +21,12 @@ class SMDAggregator:
         url = f"{self.BASE_URL}{station_id}.txt"
         # print(f"Fetching data from {url}")
 
-        response = requests.get(url)
-        if response.status_code != 200:
-            # print(f"Failed to fetch data for {station_id}")
-            return 0
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+        except Exception as e:
+            print(f"HTTP error occurred while fetching data for {station_id}: {e}")
+            return 0  # Skip processing
 
         lines = response.text.splitlines()
         key = f"buoy:{station_id}:standard-data"
