@@ -49,8 +49,7 @@ class WCHAggregator:
                     self.redis_conn.zadd(key, {json.dumps(data): timestamp})
                     records_processed_for_station += 1
                 else:
-                    print(f"Timestamp {timestamp} already exists for station {station_id}, stopping further processing.")
-                    break  
+                    break  # Exit the loop since the rest of the data is older  
 
         return records_processed_for_station      
 
