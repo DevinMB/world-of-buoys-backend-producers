@@ -59,3 +59,5 @@ class SummaryAggregator:
             file_types = available_files_by_station.get(station_id, [])
             if file_types:
                 self.redis_conn.sadd(available_info_key, *file_types)
+
+        print(f"Job complete. Awaiting next job.")
