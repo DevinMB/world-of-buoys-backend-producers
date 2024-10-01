@@ -3,23 +3,15 @@ server:
   grpc_listen_port: 0
 
 positions:
-  filename: /tmp/positions.yaml  # Track file positions for all containers
+  filename: /tmp/positions.yaml  # Track file positions for all logs
 
 clients:
-  - url: http://loki:3100/loki/api/v1/push  # Push logs to Loki
+  - url: http://loki:3100/loki/api/v1/push  # Send logs to Loki
 
 scrape_configs:
-  - job_name: 'docker-logs'
-    docker_sd_configs:
-      - host: unix:///var/run/docker.sock  # Docker service discovery using socket
-    relabel_configs:
-      - source_labels: [__meta_docker_container_name]
-        regex: '.*'
-        target_label: container_name
-      - source_labels: [__meta_docker_container_label_promtail_scrape]
-        regex: 'true'
-        action: keep  # Only scrape containers with the label 'promtail.scrape=true'
+  - job_name: docker
     pipeline_stages:
+      - docker: {}
       - json:
           expressions:
             level: level
@@ -28,5 +20,6 @@ scrape_configs:
       - targets:
           - localhost
         labels:
-          job: 'python-app'
-          __path__: /data/app.log  # This looks for /data/app.log in each container
+          job: docker
+          __path__: /var/lib/docker/containers/*/*-json.log
+      
