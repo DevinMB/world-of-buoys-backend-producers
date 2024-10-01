@@ -2,6 +2,7 @@ import redis
 import os
 import logging
 import time
+import sys
 from apscheduler.schedulers.blocking import BlockingScheduler
 from SMD_aggregator import SMDAggregator
 from WCH_aggregator import WCHAggregator
@@ -17,7 +18,7 @@ warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 APP_NAME = os.getenv("APP_NAME")
 
 logging.basicConfig(
-    filename='data/app.log', 
+    stream=sys.stdout,
     level=logging.INFO,  
     format=f'{{"app_name": "{APP_NAME}", "timestamp": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s"}}',
     datefmt='%Y-%m-%dT%H:%M:%S'

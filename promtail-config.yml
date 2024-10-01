@@ -10,16 +10,24 @@ clients:
 
 scrape_configs:
   - job_name: docker
-    pipeline_stages:
-      - docker: {}
-      - json:
-          expressions:
-            level: level
-            app_name: app_name
     static_configs:
       - targets:
           - localhost
         labels:
           job: docker
           __path__: /var/lib/docker/containers/*/*-json.log
+    pipeline_stages:
+      - docker: {}  # Automatically discovers Docker containers
+      - json:
+          expressions:
+            app_name: app_name
+            timestamp: timestamp
+            level: level
+            message: message
+      - labels:
+          app_name: app_name  # Make `app_name` a label in Loki
+          timestamp: timestamp
+          level: level
+          message: message
+
       
