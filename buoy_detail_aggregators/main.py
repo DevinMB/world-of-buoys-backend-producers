@@ -6,6 +6,7 @@ import sys
 from apscheduler.schedulers.blocking import BlockingScheduler
 from SMD_aggregator import SMDAggregator
 from WCH_aggregator import WCHAggregator
+from SRAD_aggregator import SRADAggregator
 
 from dotenv import load_dotenv
 import warnings
@@ -28,7 +29,8 @@ REDIS_SERVER = os.getenv("REDIS_SERVER")
 
 aggregator_classes = {
     'SMD': SMDAggregator,
-    'WCH': WCHAggregator
+    'WCH': WCHAggregator,
+    'SRAD' : SRADAggregator
 }
 
 AGGREGATOR_TYPE = os.getenv("AGGREGATOR_TYPE")
