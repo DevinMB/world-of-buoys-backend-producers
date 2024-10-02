@@ -50,7 +50,7 @@ class SMDAggregator:
                     self.redis_conn.zadd(key, {json.dumps(data): timestamp})
                     records_processed_for_station = records_processed_for_station + 1
                 else:
-                    break  # Exit the loop since the rest of the data is older
+                    break  
         
         return records_processed_for_station      
 

@@ -23,7 +23,7 @@ class SRADAggregator:
 
     def fetch_and_store_buoy_data(self, station_id):
         url = f"{self.BASE_URL}{station_id}.srad"  
-        print(f"Fetching data from {url}")
+        # print(f"Fetching data from {url}")
 
         try:
             response = requests.get(url)
@@ -58,8 +58,6 @@ class SRADAggregator:
 
         if len(parts) < 8:
             return None
-
-        # Extract the date and time parts
         year_str, month_str, day_str, hour_str, minute_str = parts[0:5]
 
         try:
@@ -79,13 +77,9 @@ class SRADAggregator:
             return None
 
         timestamp = int(dt.timestamp())
-
-        # Parse the remaining parts, handling 'MM' as None or missing
         srad1 = parts[5] if parts[5] != 'MM' else None
         swrad = parts[6] if parts[6] != 'MM' else None
         lwrad = parts[7] if parts[7] != 'MM' else None
-
-        # Convert numerical values if they are present
         try:
             srad1 = float(srad1) if srad1 is not None else None
             swrad = float(swrad) if swrad is not None else None
