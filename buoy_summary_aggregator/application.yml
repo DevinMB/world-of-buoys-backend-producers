@@ -5,6 +5,7 @@ services:
     image: alpine:latest
     labels:
       - "promtail.scrape=true"
+
     restart: always
     volumes:
       - buoy_${AGGREGATOR_TYPE}_aggregator:/data  
@@ -16,6 +17,7 @@ services:
       - REDIS_SERVER=${REDIS_SERVER}
       - AGGREGATOR_TYPE=${AGGREGATOR_TYPE}
       - STATION_SET_KEY=${STATION_SET_KEY}
+      - STATION_URL=${STATION_URL}
       - APP_NAME=${AGGREGATOR_TYPE}-buoy-aggregator
     networks:
       - default
@@ -37,7 +39,7 @@ services:
       fi
 
       # Run your Python script
-      python3 /data/${AGGREGATOR_TYPE}-aggregator-v${RELEASE_VERSION}/buoy_detail_aggregators/main.py;
+      python3 /data/${AGGREGATOR_TYPE}-aggregator-v${RELEASE_VERSION}/buoy_summary_aggregator/main.py;
 
       tail -f /dev/null
       "
@@ -49,4 +51,4 @@ networks:
     driver: bridge
 
 volumes:
-  buoy_SMD_aggregator:  
+  buoy_SUMMARY_aggregator:  
