@@ -7,6 +7,7 @@ This repo will be for the backend data pipelines.
 
 
 # Data Collected - An Attempt at Simplifying Terminology: 
+[Full Terminology](https://www.ndbc.noaa.gov/faq/measdes.shtml)
 
 ## SRAD Data: 
 SRAD1: Solar radiation from direct sunlight (shortwave radiation) at the surface.  
